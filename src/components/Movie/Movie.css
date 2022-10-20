@@ -1,0 +1,55 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
+
+.movies-list__item {
+    display: flex;
+}
+
+.item-image {
+    width: 183px;
+}
+
+.item-info {
+    font-family: 'Inter';
+    font-style: normal;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    padding: 10px 20px 0;
+}
+
+.item-info__title{
+    margin: 0;
+    font-size: 20px;
+    line-height: 28px;
+}
+
+.item-info__data{
+    margin: 0;
+    font-size: 12px;
+    line-height: 22px;
+    color: #827E7E;
+}
+
+.item-info__description{ 
+    margin: 0;
+    font-size: 12px;
+    line-height: 22px;
+}
+
+.item-info__buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.item-info__buttons button {
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    height: 20px;
+    background: #FAFAFA;
+    border: 1px solid #D9D9D9;
+    border-radius: 2px;
+    font-size: 12px;
+    line-height: 15px;
+    color: rgba(0, 0, 0, 0.65);
+}

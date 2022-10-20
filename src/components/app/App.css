@@ -1,1 +1,10 @@
+.App {
+    margin: 0 auto;
+    box-sizing: border-box;
+    max-width: 1010px;
 
+}
+
+.main {
+    margin: 36px;
+}
