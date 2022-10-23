@@ -32,6 +32,7 @@
 
 .item-info__description{ 
     overflow-y: hidden;
+    text-overflow: ellipsis;
     margin: 0;
     font-size: 12px;
     line-height: 22px;

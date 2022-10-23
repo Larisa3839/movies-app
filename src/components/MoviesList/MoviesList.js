@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 
 import Movie from '../Movie/Movie'
+import Spiner from '../Spiner'
+import ErrorComponent from '../ErrorComponent/ErrorComponent'
 import SearchMoviesApi from '../api'
 import './MoviesList.css'
 
@@ -14,6 +16,12 @@ export default class MoviesList extends Component {
 
   state = {
     movies: [],
+    loading: true,
+    isError: false,
+  }
+
+  onError = () => {
+    this.setState({ isError: true, loading: false })
   }
 
   createMovie = (id, poster_path, title, release_date, overview) => {
@@ -27,26 +35,35 @@ export default class MoviesList extends Component {
   }
 
   getMovies = () => {
-    SearchMoviesApi().then((res) => {
-      this.setState(({ movies }) => {
-        let arrMovies = [...movies]
-        arrMovies = res.results.map(({ id, poster_path, title, release_date, overview }) => {
-          return this.createMovie(id, poster_path, title, release_date, overview)
+    SearchMoviesApi()
+      .then((res) => {
+        this.setState(() => {
+          const arrMovies = res.results.map(({ id, poster_path, title, release_date, overview }) => {
+            return this.createMovie(id, poster_path, title, release_date, overview)
+          })
+          return { movies: arrMovies, loading: false }
         })
-        return { movies: arrMovies }
       })
-    })
+      .catch(this.onError)
   }
 
   render() {
-    const { movies } = this.state
-    const elements = movies.map((item) => {
-      return (
+    const { movies, loading, isError } = this.state
+    const hasData = !(loading || isError)
+    const errorMessage = isError ? <ErrorComponent /> : null
+    const spiner = loading ? <Spiner /> : null
+
+    if (hasData) {
+      const elements = movies.map((item) => (
         <li key={item.id}>
           <Movie {...item} />
         </li>
-      )
-    })
-    return <ul className="movies-list">{elements}</ul>
+      ))
+
+      const content = hasData ? <ul className="movies-list">{elements}</ul> : null
+      return content
+    }
+
+    return errorMessage || spiner
   }
 }
