@@ -24,7 +24,6 @@ const Movie = ({ poster_path, title, release_date, overview }) => {
           <button type="button">Drama</button>
         </div>
         <p className="item-info__description">{overview}</p>
-        <div className="rate"></div>
       </div>
     </div>
   )
