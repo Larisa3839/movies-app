@@ -1,17 +1,18 @@
 import './App.css'
+import { Input } from 'antd'
+
 import MoviesList from '../MoviesList'
-import SeacrhPanel from '../SearchPanel'
 import PaginationElement from '../Pagination'
+import NavMenu from '../NavMenu'
 
 function App() {
   return (
     <div className="App">
       <header className="header">
         <div className="menu">
-          <span className="active">Search</span>
-          <span>Rated</span>
+          <NavMenu />
         </div>
-        <SeacrhPanel />
+        <Input placeholder="Type to search..." />
       </header>
       <section className="main">
         <MoviesList />

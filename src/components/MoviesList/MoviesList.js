@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Col, Row } from 'antd'
 
 import Movie from '../Movie/Movie'
 import Spiner from '../Spiner'
@@ -8,8 +9,9 @@ import './MoviesList.css'
 
 export default class MoviesList extends Component {
   constructor() {
+    console.log('conconstructor()')
     super()
-    this.getMovies()
+    setInterval(this.getMovies(), 5000)
   }
 
   _imgPath = 'https://image.tmdb.org/t/p/original'
@@ -55,13 +57,12 @@ export default class MoviesList extends Component {
 
     if (hasData) {
       const elements = movies.map((item) => (
-        <li key={item.id}>
+        <Col key={item.id} className="gutter-row" span={12}>
           <Movie {...item} />
-        </li>
+        </Col>
       ))
 
-      const content = hasData ? <ul className="movies-list">{elements}</ul> : null
-      return content
+      return <Row gutter={[36, 36]}>{elements}</Row>
     }
 
     return errorMessage || spiner
