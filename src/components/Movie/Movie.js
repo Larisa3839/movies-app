@@ -2,6 +2,14 @@ import './Movie.css'
 import { Rate } from 'antd'
 import intlFormat from 'date-fns/intlFormat'
 
+const _macSize = 200
+
+String.prototype.cutText = function (n, text) {
+  if (this.length <= n) return this
+  const subString = this.substring(0, n - 1)
+  return (text ? subString.substring(0, subString.lastIndexOf(' ')) : subString) + '...'
+}
+
 const Movie = ({ poster_path, title, release_date, overview }) => {
   const date = intlFormat(
     new Date(release_date),
@@ -24,7 +32,7 @@ const Movie = ({ poster_path, title, release_date, overview }) => {
           <button type="button">Action</button>
           <button type="button">Drama</button>
         </div>
-        <p className="item-info__description">{overview}</p>
+        <p className="item-info__description">{overview.cutText(_macSize)}</p>
         <Rate count={8} value={4} />
       </div>
     </div>
