@@ -10,7 +10,7 @@ String.prototype.cutText = function (n, text) {
   return (text ? subString.substring(0, subString.lastIndexOf(' ')) : subString) + '...'
 }
 
-const Movie = ({ poster_path, title, release_date, overview }) => {
+const Movie = ({ poster_path, title, release_date, overview, vote_average }) => {
   const date = intlFormat(
     new Date(release_date),
     {
@@ -33,7 +33,7 @@ const Movie = ({ poster_path, title, release_date, overview }) => {
           <button type="button">Drama</button>
         </div>
         <p className="item-info__description">{overview.cutText(_macSize)}</p>
-        <Rate count={8} value={4} />
+        <Rate count={8} allowHalf defaultValue={vote_average} />
       </div>
     </div>
   )

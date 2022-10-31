@@ -1,9 +1,9 @@
 import { Pagination } from 'antd'
 import './Pagination.css'
 
-const PaginationElement = () => (
+const PaginationElement = ({ pageChange }) => (
   <>
-    <Pagination size="small" total={50} />
+    <Pagination size="small" total={50} onChange={pageChange} />
   </>
 )
 

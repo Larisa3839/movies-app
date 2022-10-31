@@ -1,10 +1,10 @@
 import { Alert } from 'antd'
 import React from 'react'
 
-const ErrorComponent = () => (
+const ErrorComponent = ({ message }) => (
   <>
     <Alert
-      message="Error Text"
+      message={message}
       description="Error Description Error Description Error Description Error Description"
       type="error"
     />

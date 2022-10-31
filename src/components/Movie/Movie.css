@@ -23,7 +23,7 @@
 .item-info__title{
     margin: 0;
     font-size: 1.4em;
-    line-height: 1.4em;
+    line-height: 28px;
 }
 
 .item-info__data{
@@ -35,7 +35,6 @@
 
 .item-info__description{ 
     overflow-y: hidden;
-    text-overflow: ellipsis;
     margin: 0;
     font-size: 12px;
     line-height: 22px;

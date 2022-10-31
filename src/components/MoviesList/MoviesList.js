@@ -8,10 +8,15 @@ import SearchMoviesApi from '../api'
 import './MoviesList.css'
 
 export default class MoviesList extends Component {
-  constructor() {
-    console.log('conconstructor()')
-    super()
-    setInterval(this.getMovies(), 5000)
+  componentDidMount() {
+    this.getMovies(this.props.query)
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.query !== prevProps.query || this.props.page !== prevProps.page) {
+      this.setState({ loading: true })
+      this.getMovies(this.props.query, this.props.page)
+    }
   }
 
   _imgPath = 'https://image.tmdb.org/t/p/original'
@@ -20,39 +25,42 @@ export default class MoviesList extends Component {
     movies: [],
     loading: true,
     isError: false,
+    messageError: '',
   }
 
-  onError = () => {
-    this.setState({ isError: true, loading: false })
+  onError = (err) => {
+    console.log(err.message)
+    this.setState({ isError: true, loading: false, messageError: err.message })
   }
 
-  createMovie = (id, poster_path, title, release_date, overview) => {
+  createMovie = (id, poster_path, title, release_date, overview, vote_average) => {
     return {
       id,
       poster_path: `${this._imgPath}${poster_path}`,
       title,
       release_date,
       overview,
+      vote_average,
     }
   }
 
-  getMovies = () => {
-    SearchMoviesApi()
+  getMovies = (query, page) => {
+    SearchMoviesApi(query, page)
       .then((res) => {
         this.setState(() => {
-          const arrMovies = res.results.map(({ id, poster_path, title, release_date, overview }) => {
-            return this.createMovie(id, poster_path, title, release_date, overview)
+          const arrMovies = res.results.map(({ id, poster_path, title, release_date, overview, vote_average }) => {
+            return this.createMovie(id, poster_path, title, release_date, overview, vote_average)
           })
-          return { movies: arrMovies, loading: false }
+          return { movies: arrMovies, loading: false, isError: false }
         })
       })
-      .catch(this.onError)
+      .catch((error) => this.onError(error))
   }
 
   render() {
     const { movies, loading, isError } = this.state
     const hasData = !(loading || isError)
-    const errorMessage = isError ? <ErrorComponent /> : null
+    const errorMessage = isError ? <ErrorComponent message={this.state.messageError} /> : null
     const spiner = loading ? <Spiner /> : null
 
     if (hasData) {
