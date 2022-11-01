@@ -53,6 +53,7 @@ export default class MoviesList extends Component {
           })
           return { movies: arrMovies, loading: false, isError: false }
         })
+        this.props.getTotalPages(res.total_pages)
       })
       .catch((error) => this.onError(error))
   }

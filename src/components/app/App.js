@@ -8,12 +8,10 @@ import PaginationElement from '../Pagination'
 import NavMenu from '../NavMenu'
 
 export default class App extends Component {
-  constructor() {
-    super()
-    this.state = {
-      value: 'return',
-      page: 1,
-    }
+  state = {
+    value: 'return',
+    page: 1,
+    total_pages: null,
   }
 
   handleChange = (e) => {
@@ -25,7 +23,12 @@ export default class App extends Component {
     console.log(page)
   }
 
+  getTotalPages = (total_pages) => {
+    this.setState({ total_pages })
+  }
+
   render() {
+    console.log(this.state.total_pages)
     return (
       <div className="App">
         <header className="header">
@@ -35,10 +38,10 @@ export default class App extends Component {
           <Input placeholder="Type to search..." onChange={debounce(this.handleChange, 300)} />
         </header>
         <section className="main">
-          <MoviesList query={this.state.value} page={this.state.page} />
+          <MoviesList query={this.state.value} page={this.state.page} getTotalPages={this.getTotalPages} />
         </section>
         <footer className="footer">
-          <PaginationElement pageChange={this.pageChange} />
+          <PaginationElement pageChange={this.pageChange} totalPages={this.state.total_pages} />
         </footer>
       </div>
     )
