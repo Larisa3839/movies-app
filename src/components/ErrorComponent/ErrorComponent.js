@@ -3,11 +3,7 @@ import React from 'react'
 
 const ErrorComponent = ({ message }) => (
   <>
-    <Alert
-      message={message}
-      description="Error Description Error Description Error Description Error Description"
-      type="error"
-    />
+    <Alert message="Error Text" description={message} type="error" />
   </>
 )
 export default ErrorComponent

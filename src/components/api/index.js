@@ -10,7 +10,7 @@ const SearchMoviesApi = async (query = 'return', page = 1) => {
     const body = await res.json()
     return await body
   } catch (error) {
-    return error
+    throw new Error(error.message)
   }
 }
 

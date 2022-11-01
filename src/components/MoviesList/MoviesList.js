@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Col, Row } from 'antd'
+import { Col, Row, Alert } from 'antd'
 
 import Movie from '../Movie/Movie'
 import Spiner from '../Spiner'
@@ -64,13 +64,14 @@ export default class MoviesList extends Component {
     const errorMessage = isError ? <ErrorComponent message={this.state.messageError} /> : null
     const spiner = loading ? <Spiner /> : null
 
-    if (hasData) {
+    if (movies.length === 0) return <Alert message="No data on request" type="info" />
+
+    if (hasData && movies.length !== 0) {
       const elements = movies.map((item) => (
         <Col key={item.id} className="gutter-row" span={12}>
           <Movie {...item} />
         </Col>
       ))
-
       return <Row gutter={[36, 36]}>{elements}</Row>
     }
 

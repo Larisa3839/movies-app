@@ -20,7 +20,6 @@ export default class App extends Component {
 
   pageChange = (page) => {
     this.setState({ page })
-    console.log(page)
   }
 
   getTotalPages = (total_pages) => {
@@ -28,7 +27,6 @@ export default class App extends Component {
   }
 
   render() {
-    console.log(this.state.total_pages)
     return (
       <div className="App">
         <header className="header">
