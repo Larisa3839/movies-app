@@ -1,12 +1,12 @@
 import './NavMenu.css'
-import { Menu } from 'antd'
+import { Tabs } from 'antd'
 
-const NavMenu = () => {
+const NavMenu = ({ changeNavPage }) => {
   const items = [
     { label: 'Search', key: 'Search' },
     { label: 'Rated', key: 'Rated' },
   ]
-  return <Menu items={items} mode="horizontal" />
+  return <Tabs defaultActiveKey="1" items={items} onChange={changeNavPage} />
 }
 
 export default NavMenu
