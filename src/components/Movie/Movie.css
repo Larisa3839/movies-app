@@ -22,7 +22,7 @@
 
 h1.ant-typography {
     margin: 0;
-    font-size: 1.4em;
+    font-size: 1.2em;
     line-height: 28px;
 }
 
@@ -54,7 +54,8 @@ div.ant-typography {
 
 .item-info__buttons {
     display: flex;
-    gap: 8px;
+    gap: 4px;
+    flex-wrap: wrap;
 }
 
 .item-info__buttons button {

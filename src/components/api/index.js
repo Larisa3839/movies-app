@@ -38,6 +38,12 @@ export default class MoviesApiService {
     return body.results
   }
 
+  getRatingById = async (id) => {
+    const movieList = await this.getRatedMovies()
+    const rating = movieList.find((movie) => movie.id === id)
+    return rating ? rating.rating : 0
+  }
+
   getGenreMovieList = async () => {
     const res = await fetch(`${this._baseUrl}genre/movie/list?api_key=${this._apiKey}`)
     const body = await res.json()
