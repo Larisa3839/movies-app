@@ -17,13 +17,30 @@ export default class App extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.state.value !== prevState.value || this.state.page !== prevState.page) {
+    if (this.state.page !== prevState.page) {
+      if (this.state.isRated) {
+        this.setState({ loading: true })
+        this.getRatedMovies()
+      } else {
+        this.setState({ loading: true })
+        this.getMovies(this.state.value)
+      }
+    }
+    if (this.state.value !== prevState.value) {
+      this.setState({ page: 1 })
       this.setState({ loading: true })
       this.getMovies(this.state.value, this.state.page)
     }
 
-    if (this.state.isRated !== prevState.isRated && this.state.isRated) {
-      this.getRatedMovies()
+    if (this.state.isRated !== prevState.isRated) {
+      if (this.state.isRated) {
+        this.setState({ page: 1 })
+        this.setState({ loading: true })
+        this.getRatedMovies()
+      } else {
+        this.setState({ loading: true })
+        this.getMovies(this.state.value)
+      }
     }
   }
 
@@ -40,9 +57,9 @@ export default class App extends Component {
     genres: [],
   }
 
-  getMovies = (query, page) => {
+  getMovies = (query) => {
     this.moviesApiService
-      .SearchMoviesApi(query, page)
+      .SearchMoviesApi(query, this.state.page)
       .then((res) => {
         this.setState(() => {
           const arrMovies = res.results.map(
@@ -62,11 +79,14 @@ export default class App extends Component {
       .getRatedMovies()
       .then((res) => {
         this.setState(() => {
-          const arrMovies = res.map(({ id, poster_path, title, release_date, overview, vote_average, genre_ids }) => {
-            return this.createMovie(id, poster_path, title, release_date, overview, vote_average, genre_ids)
-          })
+          const arrMovies = res.results.map(
+            ({ id, poster_path, title, release_date, overview, vote_average, genre_ids }) => {
+              return this.createMovie(id, poster_path, title, release_date, overview, vote_average, genre_ids)
+            }
+          )
           return { ratedMovies: arrMovies, loading: false, isError: false }
         })
+        this.setState({ total_pages: res.total_pages })
       })
       .catch((error) => this.setState({ isError: true, loading: false, messageError: error.message }))
   }

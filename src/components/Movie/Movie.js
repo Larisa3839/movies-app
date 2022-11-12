@@ -80,7 +80,6 @@ export default class Movie extends Component {
               </span>
             </Col>
           </Row>
-
           <Text type="secondary" className="item-info__data">
             {date}
           </Text>

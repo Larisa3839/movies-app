@@ -32,15 +32,17 @@ export default class MoviesApiService {
     return body
   }
 
-  getRatedMovies = async () => {
-    const res = await fetch(`${this._baseUrl}guest_session/${this.guestSessionId}/rated/movies?api_key=${this._apiKey}`)
+  getRatedMovies = async (page = 1) => {
+    const res = await fetch(
+      `${this._baseUrl}guest_session/${this.guestSessionId}/rated/movies?api_key=${this._apiKey}&${page}`
+    )
     const body = await res.json()
-    return body.results
+    return body
   }
 
   getRatingById = async (id) => {
     const movieList = await this.getRatedMovies()
-    const rating = movieList.find((movie) => movie.id === id)
+    const rating = movieList.results.find((movie) => movie.id === id)
     return rating ? rating.rating : 0
   }
 
@@ -50,7 +52,7 @@ export default class MoviesApiService {
     return body.genres
   }
 
-  SearchMoviesApi = async (query = 'return', page = 1) => {
+  SearchMoviesApi = async (query, page = 1) => {
     try {
       if (!window.navigator.onLine) throw new Error('You are Offline')
       const res = await fetch(`${this._baseUrl}search/movie?api_key=${this._apiKey}&query=${query}&page=${page}`)
