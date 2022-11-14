@@ -8,10 +8,14 @@ import PaginationElement from '../Pagination'
 import NavMenu from '../NavMenu'
 import MoviesApiService from '../api'
 import GenreContext from '../GenreContext'
+import MoviesApiServiceContext from '../MoviesApiContext'
 
 export default class App extends Component {
-  componentDidMount() {
+  constructor() {
+    super()
     this.moviesApiService = new MoviesApiService()
+  }
+  componentDidMount() {
     this.getMovies(this.state.value)
     this.moviesApiService.getGenreMovieList().then((res) => this.setState({ genres: res }))
   }
@@ -121,27 +125,29 @@ export default class App extends Component {
       <Input placeholder="Type to search..." onChange={debounce(this.handleChange, 300)} />
     ) : null
     return (
-      <GenreContext.Provider value={this.state.genres}>
-        <div className="App">
-          <header className="header">
-            <div className="menu">
-              <NavMenu changeNavPage={this.changeNavPage} />
-            </div>
-            {input}
-          </header>
-          <section className="main">
-            <MoviesList
-              dataMovies={isRated ? ratedMovies : movies}
-              isError={isError}
-              loading={loading}
-              messageError={messageError}
-            />
-          </section>
-          <footer className="footer">
-            <PaginationElement pageChange={this.pageChange} totalPages={this.state.total_pages} />
-          </footer>
-        </div>
-      </GenreContext.Provider>
+      <MoviesApiServiceContext.Provider value={this.moviesApiService}>
+        <GenreContext.Provider value={this.state.genres}>
+          <div className="App">
+            <header className="header">
+              <div className="menu">
+                <NavMenu changeNavPage={this.changeNavPage} />
+              </div>
+              {input}
+            </header>
+            <section className="main">
+              <MoviesList
+                dataMovies={isRated ? ratedMovies : movies}
+                isError={isError}
+                loading={loading}
+                messageError={messageError}
+              />
+            </section>
+            <footer className="footer">
+              <PaginationElement pageChange={this.pageChange} totalPages={this.state.total_pages} />
+            </footer>
+          </div>
+        </GenreContext.Provider>
+      </MoviesApiServiceContext.Provider>
     )
   }
 }

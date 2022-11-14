@@ -4,8 +4,8 @@ import { Rate, Typography, Image, Col, Row } from 'antd'
 import intlFormat from 'date-fns/intlFormat'
 import { Component } from 'react'
 
-import MoviesApiService from '../api'
 import GenreContext from '../GenreContext'
+import MoviesApiServiceContext from '../MoviesApiContext'
 
 const { Title, Text, Paragraph } = Typography
 const _maxLenhth = 150
@@ -25,6 +25,8 @@ export default class Movie extends Component {
     rating: null,
   }
 
+  moviesApiService = this.context
+
   getColor = (value) => {
     if (value >= 0 && value < 3) return '#E90000'
     if (value >= 3 && value < 5) return '#E97E00'
@@ -41,14 +43,12 @@ export default class Movie extends Component {
   }
 
   sendRate = (rate, id) => {
-    const moviesApiService = new MoviesApiService()
-    moviesApiService.sendRateMovie(id, rate)
+    this.moviesApiService.sendRateMovie(id, rate)
     this.setState({ rating: rate })
   }
 
   getRating = (id) => {
-    const moviesApiService = new MoviesApiService()
-    moviesApiService.getRatingById(id).then((res) => this.setState({ rating: res }))
+    this.moviesApiService.getRatingById(id).then((res) => this.setState({ rating: res }))
   }
 
   render() {
@@ -103,3 +103,5 @@ export default class Movie extends Component {
     )
   }
 }
+
+Movie.contextType = MoviesApiServiceContext

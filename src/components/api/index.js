@@ -1,32 +1,35 @@
 export default class MoviesApiService {
   constructor() {
-    if (localStorage.guestSessionId) {
-      this.guestSessionId = localStorage.guestSessionId
-    } else {
-      this.getGuestSessionId().then((res) => localStorage.setItem('guestSessionId', res.guest_session_id))
-    }
+    this.guestSessionId = this.getGuestSessionId()
   }
 
   _baseUrl = 'https://api.themoviedb.org/3/'
   _apiKey = '9e6db05c9e88c5afa69666860fbb151e'
   baseImgUrl = 'https://image.tmdb.org/t/p/original'
 
-  getGuestSessionId = async () => {
+  createGuestSessionId = async () => {
     try {
       if (!window.navigator.onLine) throw new Error('You are Offline')
       const res = await fetch(`${this._baseUrl}authentication/guest_session/new?api_key=${this._apiKey}`)
       const body = await res.json()
-      return body
+      localStorage.setItem('guestSessionId', body.guest_session_id)
+      return body.guest_session_id
     } catch (error) {
       throw new Error(error.message)
     }
+  }
+
+  getGuestSessionId = async () => {
+    if (localStorage.guestSessionId) return localStorage.guestSessionId
+    return await this.createGuestSessionId()
   }
 
   sendRateMovie = async (movie_id, value) => {
     try {
       if (!window.navigator.onLine) throw new Error('You are Offline')
       const res = await fetch(
-        `${this._baseUrl}movie/${movie_id}/rating?api_key=${this._apiKey}&guest_session_id=${this.guestSessionId}`,
+        `${this._baseUrl}movie/${movie_id}/rating?api_key=${this._apiKey}&guest_session_id=${await this
+          .guestSessionId}`,
         {
           method: 'POST',
           headers: {
@@ -35,8 +38,7 @@ export default class MoviesApiService {
           body: JSON.stringify({ value }),
         }
       )
-      const body = await res.json()
-      return body
+      return await res.json()
     } catch (error) {
       throw new Error(error.message)
     }
@@ -46,10 +48,9 @@ export default class MoviesApiService {
     try {
       if (!window.navigator.onLine) throw new Error('You are Offline')
       const res = await fetch(
-        `${this._baseUrl}guest_session/${this.guestSessionId}/rated/movies?api_key=${this._apiKey}&${page}`
+        `${this._baseUrl}guest_session/${await this.guestSessionId}/rated/movies?api_key=${this._apiKey}&${page}`
       )
-      const body = await res.json()
-      return body
+      return await res.json()
     } catch (error) {
       throw new Error(error.message)
     }
@@ -81,8 +82,7 @@ export default class MoviesApiService {
       if (!window.navigator.onLine) throw new Error('You are Offline')
       const res = await fetch(`${this._baseUrl}search/movie?api_key=${this._apiKey}&query=${query}&page=${page}`)
       if (!res.ok) throw new Error(`Could not fetch ${this._baseUrl} ${res.status}`)
-      const body = await res.json()
-      return await body
+      return await res.json()
     } catch (error) {
       throw new Error(error.message)
     }
