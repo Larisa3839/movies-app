@@ -75,3 +75,30 @@ div.ant-typography {
     font-size: 15px;
     margin-top: auto;
 }
+
+@media (max-width: 768px) { 
+    .ant-col-12 {
+        max-width: 100%;
+        flex: none;
+    }
+
+    .item-info {
+        padding: 10px 10px 10px 0;
+    }
+
+    .ant-image {
+        margin: 10px;
+        width: 60px;
+        height: 90px;
+    }
+
+    .ant-image .item-image {
+        width: auto;
+    }
+
+    .ant-rate {
+        align-self: flex-end;
+    }
+
+    
+}

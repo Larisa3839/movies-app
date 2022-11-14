@@ -7,13 +7,6 @@ import ErrorComponent from '../ErrorComponent/ErrorComponent'
 import './MoviesList.css'
 
 export default class MoviesList extends Component {
-  /*componentDidUpdate(prevProps) {
-    if (this.props.query !== prevProps.query || this.props.page !== prevProps.page) {
-      this.setState({ loading: true })
-      this.getMovies(this.props.query, this.props.page)
-    }
-  }*/
-
   render() {
     const { dataMovies, loading, isError, messageError } = this.props
     const hasData = !(loading || isError)

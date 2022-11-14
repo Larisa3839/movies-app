@@ -27,5 +27,17 @@
     margin: 36px;
 }
 
+@media (max-width: 768px )  {
+    .App {
+        width: 420px;
+    }
+    .header {
+        margin: 20px 10px 0;
+    }
+    .main {
+        margin: 16px;
+    }
+}
+
 
 
