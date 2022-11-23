@@ -6,69 +6,85 @@ import debounce from 'lodash.debounce'
 import MoviesList from '../MoviesList'
 import PaginationElement from '../Pagination'
 import NavMenu from '../NavMenu'
-import MoviesApiService from '../api'
-import GenreContext from '../GenreContext'
-import MoviesApiServiceContext from '../MoviesApiContext'
+import MoviesApiService from '../../api/movieApiService'
+import GenreContext from '../../context/GenreContext/GenreContext'
+import MoviesApiServiceContext from '../../context/MoviesApiContext/MoviesApiServiceContext'
 
 export default class App extends Component {
   constructor() {
     super()
+
+    this.state = {
+      movies: [],
+      ratedMovies: [],
+      isRated: false,
+      loading: true,
+      isError: false,
+      messageError: '',
+      searchValue: '',
+      page: 1,
+      total_pages: null,
+      genres: [],
+    }
+
     this.moviesApiService = new MoviesApiService()
   }
   componentDidMount() {
-    this.getMovies(this.state.value)
+    if (localStorage.guestSessionId) this.moviesApiService.setGuestSessionId(localStorage.guestSessionId)
+    else this.moviesApiService.getGuestSessionId().then((res) => localStorage.setItem('guestSessionId', res))
+
+    this.getMovies(this.state.searchValue)
     this.moviesApiService.getGenreMovieList().then((res) => this.setState({ genres: res }))
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.state.page !== prevState.page) {
+    this.pageСhangeСheck(prevState.page)
+    this.searchValueСhangeСheck(prevState.searchValue)
+    this.tabСhangeСheck(prevState.isRated)
+  }
+
+  pageСhangeСheck = (prevPage) => {
+    if (this.state.page !== prevPage) {
       if (this.state.isRated) {
         this.setState({ loading: true })
         this.getRatedMovies()
       } else {
         this.setState({ loading: true })
-        this.getMovies(this.state.value)
+        this.getMovies(this.state.searchValue)
       }
     }
-    if (this.state.value !== prevState.value) {
+  }
+
+  searchValueСhangeСheck = (prevSearchValue) => {
+    if (this.state.searchValue !== prevSearchValue) {
       this.setState({ page: 1 })
       this.setState({ loading: true })
-      this.getMovies(this.state.value, this.state.page)
+      this.getMovies(this.state.searchValue, this.state.page)
     }
+  }
 
-    if (this.state.isRated !== prevState.isRated) {
+  tabСhangeСheck = (prevTab) => {
+    if (this.state.isRated !== prevTab) {
       if (this.state.isRated) {
         this.setState({ page: 1 })
         this.setState({ loading: true })
         this.getRatedMovies()
       } else {
         this.setState({ loading: true })
-        this.getMovies(this.state.value)
+        this.getMovies(this.state.searchValue)
       }
     }
   }
 
-  state = {
-    movies: [],
-    ratedMovies: [],
-    isRated: false,
-    loading: true,
-    isError: false,
-    messageError: '',
-    value: 'return',
-    page: 1,
-    total_pages: null,
-    genres: [],
-  }
-
   getMovies = (query) => {
+    if (!query || !query.trim()) return this.setState({ movies: [], loading: false, isError: false, total_pages: 1 })
     this.moviesApiService
       .SearchMoviesApi(query, this.state.page)
       .then((res) => {
         this.setState(() => {
           const arrMovies = res.results.map(
             ({ id, poster_path, title, release_date, overview, vote_average, genre_ids }) => {
-              return this.createMovie(id, poster_path, title, release_date, overview, vote_average, genre_ids)
+              return { id, poster_path, title, release_date, overview, vote_average, genre_ids }
             }
           )
           return { movies: arrMovies, loading: false, isError: false }
@@ -85,7 +101,7 @@ export default class App extends Component {
         this.setState(() => {
           const arrMovies = res.results.map(
             ({ id, poster_path, title, release_date, overview, vote_average, genre_ids }) => {
-              return this.createMovie(id, poster_path, title, release_date, overview, vote_average, genre_ids)
+              return { id, poster_path, title, release_date, overview, vote_average, genre_ids }
             }
           )
           return { ratedMovies: arrMovies, loading: false, isError: false }
@@ -95,20 +111,8 @@ export default class App extends Component {
       .catch((error) => this.setState({ isError: true, loading: false, messageError: error.message }))
   }
 
-  createMovie = (id, poster_path, title, release_date, overview, vote_average, genre_ids) => {
-    return {
-      id,
-      poster_path: `${this.moviesApiService.baseImgUrl}${poster_path}`,
-      title,
-      release_date,
-      overview,
-      vote_average,
-      genre_ids,
-    }
-  }
-
-  handleChange = (e) => {
-    this.setState({ value: e.target.value })
+  handleChangeInput = (e) => {
+    this.setState({ searchValue: e.target.value })
   }
 
   pageChange = (page) => {
@@ -122,7 +126,7 @@ export default class App extends Component {
   render() {
     const { movies, ratedMovies, isError, isRated, loading, messageError } = this.state
     const input = !isRated ? (
-      <Input placeholder="Type to search..." onChange={debounce(this.handleChange, 300)} />
+      <Input placeholder="Type to search..." onChange={debounce(this.handleChangeInput, 300)} />
     ) : null
     return (
       <MoviesApiServiceContext.Provider value={this.moviesApiService}>

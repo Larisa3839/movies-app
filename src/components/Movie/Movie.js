@@ -1,24 +1,26 @@
 /* eslint-disable indent */
 import './Movie.css'
-import { Rate, Typography, Image, Col, Row } from 'antd'
+import { Rate, Typography, Col, Row } from 'antd'
 import intlFormat from 'date-fns/intlFormat'
 import { Component } from 'react'
 
-import GenreContext from '../GenreContext'
-import MoviesApiServiceContext from '../MoviesApiContext'
+import GenreContext from '../../context/GenreContext/GenreContext'
+import MoviesApiServiceContext from '../../context/MoviesApiContext/MoviesApiServiceContext'
+import Poster from '../Poster'
 
 const { Title, Text, Paragraph } = Typography
 const _maxLenhth = 150
 
-String.prototype.cutText = function (length) {
-  if (this.length <= length) return this
-  const subString = this.substring(0, length + 1)
+const cutText = (text, length) => {
+  if (text.length <= length) return text
+  const subString = text.substring(0, length + 1)
   return subString.substring(0, subString.lastIndexOf(' ')) + '...'
 }
 
 export default class Movie extends Component {
   componentDidMount() {
     this.getRating(this.props.id)
+    return () => this.setState({ loading: false })
   }
 
   state = {
@@ -68,7 +70,7 @@ export default class Movie extends Component {
       : null
     return (
       <div className="movies-list__item">
-        <Image className="item-image" src={poster_path} />
+        <Poster posterPath={poster_path} />
         <div className="item-info">
           <Row wrap={false} align="top">
             <Col flex="auto">
@@ -96,7 +98,7 @@ export default class Movie extends Component {
               return <div className="item-info__buttons">{genreButton}</div>
             }}
           </GenreContext.Consumer>
-          <Paragraph className="item-info__description">{overview.cutText(_maxLenhth)}</Paragraph>
+          <Paragraph className="item-info__description">{cutText(overview, _maxLenhth)}</Paragraph>
           <Rate count={10} value={this.state.rating} onChange={(rate) => this.sendRate(rate, id)} />
         </div>
       </div>

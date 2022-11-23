@@ -17,7 +17,7 @@ export default class MoviesList extends Component {
     if (hasData && dataMovies.length !== 0) {
       const elements = dataMovies.map((item) => (
         <Col key={item.id} className="gutter-row" span={12}>
-          <Movie {...item} />
+          <Movie {...item} loading={loading} />
         </Col>
       ))
       return <Row gutter={[36, 36]}>{elements}</Row>
