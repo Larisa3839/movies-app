@@ -1,20 +1,7 @@
-import { useEffect, useState } from 'react'
 import './Poster.css'
 import { Image } from 'antd'
 
-import Spiner from '../Spiner'
-
 const Poster = ({ posterPath }) => {
-  const [loading, setLoading] = useState(true)
-  useEffect(() => {
-    if (posterPath)
-      fetch(`https://image.tmdb.org/t/p/original${posterPath}`, {
-        headers: { 'strict-origin-when-cross-origin': '*' },
-        mode: 'no-cors',
-      })
-        .then(() => setLoading(false))
-        .catch((error) => console.log(error.message))
-  }, [])
   const customImage = !posterPath ? (
     <Image
       src="error"
@@ -27,9 +14,7 @@ const Poster = ({ posterPath }) => {
     <Image className="item-image" src={`https://image.tmdb.org/t/p/original${posterPath}`} />
   ) : null
 
-  const spiner = loading ? <Spiner /> : null
-
-  return spiner || customImage || posterImg
+  return customImage || posterImg
 }
 
 export default Poster

@@ -147,7 +147,11 @@ export default class App extends Component {
               />
             </section>
             <footer className="footer">
-              <PaginationElement pageChange={this.pageChange} totalPages={this.state.total_pages} />
+              <PaginationElement
+                current={this.state.page}
+                pageChange={this.pageChange}
+                totalPages={this.state.total_pages}
+              />
             </footer>
           </div>
         </GenreContext.Provider>

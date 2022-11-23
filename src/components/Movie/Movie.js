@@ -7,6 +7,7 @@ import { Component } from 'react'
 import GenreContext from '../../context/GenreContext/GenreContext'
 import MoviesApiServiceContext from '../../context/MoviesApiContext/MoviesApiServiceContext'
 import Poster from '../Poster'
+import Spiner from '../Spiner'
 
 const { Title, Text, Paragraph } = Typography
 const _maxLenhth = 150
@@ -54,7 +55,7 @@ export default class Movie extends Component {
   }
 
   render() {
-    const { id, poster_path, title, release_date, overview, vote_average } = this.props
+    const { id, poster_path, title, release_date, overview, vote_average, loading } = this.props
     const date = release_date
       ? intlFormat(
           new Date(release_date),
@@ -68,9 +69,12 @@ export default class Movie extends Component {
           }
         )
       : null
+
+    const spiner = loading ? <Spiner /> : null
+    const poster = !loading ? <Poster posterPath={poster_path} /> : null
     return (
       <div className="movies-list__item">
-        <Poster posterPath={poster_path} />
+        {spiner || poster}
         <div className="item-info">
           <Row wrap={false} align="top">
             <Col flex="auto">
